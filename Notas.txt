@@ -1,0 +1,160 @@
+git remote add origin https://github.com/Esnuguel/Peliculas_SpringBoot.git
+git branch -M main
+git push -u origin main
+-------------------------------------
+https://docs.spring.io/spring-boot/tutorial/first-application/index.html //para produccion xd
+-------------------------------------
+Notaciones Spring:
+@RestController: Notacion de esteriotipo
+
+@SpringBootApplication: Sirve para configuara automaticamente el proyecto con forme a los jar
+que se contengan, convina  @SpringBootConfiguration, @EnableAutoConfigurationy @ComponentScan.
+
+--
+@Controller: sirve para detectar las clases de implementacion automaticamente, 
+mediante el escaneo de rutas de clases, Se combina con los controladores anotados RequestMapping
+
+//Un controlador es aquel que resive peticiones http, y puede manegar respuestas
+
+    Controladores RequestMapping: Anotación para mapear solicitudes web a métodos en clases de manejo 
+    de solicitudes con firmas de métodos flexibles.
+    Algunos metodos son @GetMapping @PostMapping @PutMapping @DeletMapping @PatchMapping
+    @RestController: lo mismo que cotroller pero en vez de devolver una vista debuelve un json
+
+Funcionalidades principales de @RequestMapping //Puede usar todas las peticiones http
+//Metodos especificios que hacen lo mismo(@GetMapping, @PostMapping, @DeleteMapping, @PutMapping, @PatchMapping)
+    Atributos comunes de @RequestMapping
+        value o path: Define la(s) ruta(s) de la solicitud.
+        method: Especifica el método HTTP (GET, POST, etc.).
+        params: Filtra solicitudes basándose en parámetros.
+        headers: Filtra solicitudes basándose en encabezados HTTP.
+            headers = "X-Custom-Header=CustomValue"
+            Información general sobre la solicitud o la respuesta.
+        produces: Define los tipos de contenido de salida que admite (como JSON o XML).
+        consumes: Define los tipos de contenido de entrada que admite.
+
+@RequestParam: Extrae paremetros de la url para solicitudes get o post
+    Atributos:
+        value(alias): (value="userName")    //Solicitud ?userName="esnuguel"
+        required: indica si el valor es obligatorio (required=false) 
+        defaultValue: proporciona un valor defecto si el parametro no esta presente (defaultValue="algo")
+
+        Se pueden usar varios @RequestParam dentro de una misma firma de metodo
+
+@PathVariable: Extrae valores dinamicos de la ruta URl y los pasa como argumentos a los metodos
+    Atributos:
+        value: (@PathVariable(value="user_id") String id)
+        required:
+        
+        Se pueden usar varios @PathVariable dentro de una misma firma de metodo
+
+@Valid
+Realiza validaciones automaticas sobre los objetos que son pasados como parametro
+    BindingResult br: sirve para tener los errores obtenidos de las validaciones = br.hasErrors()
+
+@ModelAttribute:
+    //En un controlador
+    se utiliza para para prepara datos que se envian a la vista como para capturarlos de una solicitud HTTP
+    //Recibir datos
+    pring busca los parámetros correspondientes en la solicitud y los asigna a las variables del controlador. 
+    Atributos:
+        name: especifica el nombre del atributo que se va a gregar al modelo @ModelAttribute(name="xd")
+
+-------------------------
+MultipartFile file:
+    Sirve en campos file y con un formulario con el atributo enctype="multipart/form-data en HTML
+    Metodos:
+        file.getName(); devuelve el nombre del campo del formulario usado para cargar el archivo
+        file.getOriginalFilename(): Devuelve el nombre original del archivo
+        file.getContentType(): devuelve el tipo de contenido MIME
+        file.isEmpty(): verifica si esta vacio 
+        file.getSize(): devuelbe el tamaño de los bytes
+        byte[] fb= file.getBytes(): devuelve los bytes como un arreglo de bytes
+        file.transferTo(): permite guardar el archivo en un lugar especifico
+            Ejemplo:
+                File dest = new File("/path/to/destination/file.jpg");
+                file.transferTo(dest);
+        
+        InputStream file.getInputStream(): devuelve un InputStream del archivo cargado
+        Resource resource = file.getResource(): Devuelve un org.springframework.core.io.Resource,accede al archivo como un recurso dentro de Spring.
+
+@Service: operacion ofreciada como un componente de servicio, es como se manega la logica de negocio
+    Es para facilitar la programacion xd, evita que pongas el XD xd=new XD() ya que lo hace solo el autowried
+
+@Repository: Indica que es un repositorio, encapsula el comportamiento de almacenamiento,recuperación
+y busqueda que emula una colección de objetos
+
+@Autowired: para que se llame o conecte automaticamente mediante las funciones de inyeccion de dependecia de spring
+Marca un constructor, campo, método de establecimiento o método de configuració
+///////////
+InputStream: Lee datos byte por byte
+    Metodos: 
+        inputStream.read(): Lee un byte de datos y lo devuelve como un entero (0-255). Si se llega al final del flujo, devuelve -1.
+        Ejemplo:
+            InputStream inputStream = new FileInputStream("archivo.txt");
+            int byteData = inputStream.read();
+        y muchos mas xd...
+
+
+Files: Trabaja con archivos y directorios
+    Metodos:
+        Files.copy(source, target): copia un archivo de una ubicacion a otra, si ya existe la sobre escribe
+        Files.move(source,target): mueve un archivo de una ubicacion a otra, tambien puede cambiar el nombre del archivo
+        Files.delete(path): elimina un archivo o directorio vacio
+        Files.exists(path): devuelve tru si existe si no false xd
+        Files.createFile(path): crea un archivo vacio en la ubicacion especificada
+        Files.createDirectories(path): Crea un directorio y si no exsiten, crea todos los intermediarios necesarios
+        Files.write(path, bytes): scribe un arreglo de bytes a un archivo. Si el archivo ya existe, se sobrescribe.
+            Ejemplo
+                Path path = Paths.get("file.txt");
+                byte[] bytes = "Hello, World!".getBytes();
+                Files.write(path, bytes);
+        Files.readAllBytes(path): Lee todos los bytes de un archivo y los devuelve como un arreglo de bytes
+            Ejemplo:
+                Path path = Paths.get("file.txt");
+                byte[] content = Files.readAllBytes(path);
+                System.out.println(new String(content));  // Imprime el contenido del archivo
+        ...
+        copy(InputStream in, Path target): Copia los datos de un InputStream a un archivo en la ruta de destino.
+            Ejemplo:
+                try (InputStream in = Files.newInputStream(sourcePath)) {
+                    Files.copy(in, targetPath, StandardCopyOption.REPLACE_EXISTING);
+                }
+
+Resource: permite representar la respuesta HTTP completa, incluida la carga útil (body), los encabezados (headers) y el código de estado (status code). 
+
+
+ResponseEntity:
+
+import java.nio.file.Path:  representa una ruta de archivo o directorio en un sistema de archivos.
+
+import java.nio.file.Paths:  es una clase de utilidad que ofrece métodos para crear instancias de Path
+    Path path = Paths.get("C:/mi/directorio/archivo.txt");
+    Path path = Paths.get(new URI("file:///C:/mi/directorio/archivo.txt"));
+
+
+/////////////
+
+
+
+//Classes o metodos desconocidos:
+ResponseEntity 
+    Resource 
+        new UrlResource(resolvePath(archivo).toUri());
+    
+    .ok()
+        .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename\""+resource.getFilename()+"\"")
+        .body(resource);
+
+Path
+
+InputStream bytes
+
+class CrudRepository
+-----------------------------------
+
+////Dependencias
+org.springframework.core.io.Resource
+org.springframework.http.ResponseEntity
+org.springframework.http.HttpHeaders;
+org.springframework.data.repository.CrudRepository

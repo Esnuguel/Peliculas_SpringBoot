@@ -11,7 +11,9 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.persistence.Temporal;
@@ -36,12 +38,21 @@ public class Pelicula implements Serializable{
     private Date fechaEstreno;
     //Esto es para mi primer proyecto en spring y el video dice que es one to one pero realmente es one to many
     @NotNull()
-    @OneToOne
+    @ManyToOne
+    @JoinColumn(name="gen_id") //Nombre de la columna que tenga el id del genero
     private Genero genero;
     //Así viene en el video pero yo lo normalizare luego quiza....
     @ManyToMany
     private List<Actor> protagonistas;
 
+    private String imagen;
+
+    public String getImagen() {
+        return imagen;
+    }
+    public void setImagen(String imagen) {
+        this.imagen = imagen;
+    }
     public Long getId() {
         return id;
     }

@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.peliculas.peliculas.dao.IGeneroRepository;
 import com.peliculas.peliculas.entities.Genero;
-@Service
+@Service //Para logica del negocio
 public class GeneroService implements IGeneroService{
     //es como ponerle new IGenroRepository xd
     @Autowired 
