@@ -10,13 +10,12 @@
         <div class="row row-cols-1 row-cols-md-3 g-4">
             <div class="col" th:each="pelicula : ${peliculas}">
               <div class="card">
-                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/7/7d/DAI06019_%2849138085157%29.jpg/640px-DAI06019_%2849138085157%29.jpg" class="card-img-top" alt="foto">
+                <img th:src="@{${'/archivo?n='} + ${pelicula.imagen == null ? 'Confundido.jpg' : pelicula.imagen } }" class="card-img-top" alt="foto">
                 <div class="card-body">
                   <h5 class="card-title" th:text="${pelicula.nombre}"></h5>
                   <p class="card-text" th:text="${pelicula.genero.nombre}"></p>
-                  <div class="catalogo-actor-container" th:each="protagonista:${protagonistas}">
-                    <div class="catalogo-actor-imagen" th:style="'background:url('+@{protagonista.urlImagen}+')'">
-                    </div>
+                  <div class="catalogo-actor-container" th:each="protagonista:${pelicula.protagonistas}">
+                    <div class="catalogo-actor-imagen" th:style="'background-image:url(' + ${protagonista.urlImagen} + ')'"></div>
                     <div class="catalogo-actor-texto" th:text="${protagonista.nombre}">
                     </div>
                   </div>
