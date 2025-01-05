@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.peliculas.peliculas.dao.IActorRepository;
 import com.peliculas.peliculas.entities.Actor;
@@ -63,7 +64,7 @@ public class PeliculasController {
             {
                 ids=actor.getId().toString();
             }else{
-                ids=ids + "," +actor.getId().toString();
+                ids+= "," +actor.getId().toString();
             }
         }
 
@@ -84,7 +85,7 @@ public class PeliculasController {
 
         if(br.hasErrors())
         {
-            model.addAttribute("titulo","Nuva pelicula");
+            //model.addAttribute("titulo","Nuva pelicula");
             model.addAttribute("generos", generoService.findAll());
             model.addAttribute("actores", actorService.findAll());
             return "pelicula";
@@ -102,7 +103,7 @@ public class PeliculasController {
         }else{
             pelicula.setImagen("Confundido.jpg");
         }
-        if(ids!=null && "".equals(ids))
+        if(ids!=null && !"".equals(ids))
         {
             List<Long> idsProta=Arrays.stream(ids.split(",")).map(Long::parseLong).collect(Collectors.toList());
             List<Actor> protagonistas=(List<Actor>) actorService.findAllById(idsProta);
@@ -127,11 +128,25 @@ public class PeliculasController {
         return archivo.substring(archivo.lastIndexOf("."));
     }
     @GetMapping({"/listado"})
-    public String listado (Model model)
+    public String listado (Model model, @RequestParam(required = false) String msj,@RequestParam(required = false) String tipoMsj )
     {
         model.addAttribute("titulo","Listado de peliculas");
         model.addAttribute("peliculas", service.findAll());
+        if(!"".equals(tipoMsj) && !"".equals(msj))
+        {
+            model.addAttribute("msj", msj);
+            model.addAttribute("tipoMsj", tipoMsj);
+        }
+
         return "listado";
     }
 
+    @GetMapping("/pelicula/{id}/delete")
+    public String eliminar(@PathVariable(name="id") Long id,Model model, RedirectAttributes redirectAtt)
+    {
+        service.delete(id);
+        redirectAtt.addAttribute("msj","la pelicula fue eliminada correctamete");
+        redirectAtt.addAttribute("tipoMsj","success");
+        return "redirect:/listado";
+    }
 }

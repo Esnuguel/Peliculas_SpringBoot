@@ -20,6 +20,7 @@
                 <td th:text="${pelicula.genero.nombre}">Mark</td>
                 <td>
                     <a th:href="@{'/pelicula/' + ${pelicula.id}}">editar</a>
+                    <a th:href="@{'/pelicula/' + ${pelicula.id + '/delete'}}" class="text-danger">eliminar</a>
                 </td>
               </tr>
             </tbody>
